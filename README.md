@@ -1,4 +1,4 @@
-# PyConsole
+# PyCLI
 Simple CLI creator for python.
 
 # Example
