@@ -3,8 +3,8 @@ Simple CLI creator for python.
 
 # Example
 ```py
-# The console.py file needs to be in the same folder for this to work.
-from console import console
+# The cli.py file needs to be in the same folder for this to work.
+from cli import console
 
 if __name__ == "__main__":
     app = console(title="Cool command line app")
