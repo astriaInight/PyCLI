@@ -1,13 +1,16 @@
+# cli.py
+
 import os
 import sys
 
-class console():
+
+class Console:
     def __init__(self, title="Console", input_text=">> ", enable_defaults=True, enable_tips=True):
         os.system(f"title {title}")
         self.cmds = {}
         self.input_text = input_text
 
-        if enable_defaults:
+        if enable_defaults:  # If the defaults are enabled, we must insert the standard help and exit commands
             self.register_command(
                 "help",
                 "Lists all commands",
@@ -20,18 +23,21 @@ class console():
             )
 
         if enable_tips:
-            self.print("To get a list of commands, type help.")
+            self._print("To get a list of commands, type help.")
 
         # Let the user configure it first
-        #self.accept_input()
+        # self.accept_input()
 
-    def error(self, error_string):
+    @staticmethod
+    def _error(error_string: str) -> None:
         print(f"Error: {error_string}")
 
-    def print(self, print_string):
+    @staticmethod
+    def _print(print_string: str) -> None:
         print(print_string)
 
-    def accept_input(self):
+    # Recursively retrieves the users input
+    def accept_input(self) -> None:
         cmd = input(self.input_text)
         split_cmd = cmd.split(" ")
         cmd_name = split_cmd[0]
@@ -42,25 +48,27 @@ class console():
             target_cmd = self.cmds[cmd_name]
 
             cmd_func = target_cmd["func"]
-            
+
             cmd_func(*cmd_args)
-
-            # Accept input again after, so the program doesn't just close
-            self.accept_input()
         else:
-            self.error(f"Invalid command '{cmd_name}'")
-            self.accept_input()
+            self._error(f"Invalid command '{cmd_name}'")
 
-    def register_command(self, name, desc, func):
+        # Run the input again, allowing for recursive checks
+        self.accept_input()
+
+    # Creates a new command
+    def register_command(self, name: str, desc: str, func) -> None:
         self.cmds[name] = {
             "desc": desc,
             "func": func
         }
 
-    def list_cmds(self):
+    # Fetches a list of commands and sends it back to the user
+    def list_cmds(self) -> None:
         cmd_list_str = ""
 
+        # Iterate through commands and append it to our string
         for cmd_name, cmd in self.cmds.items():
             cmd_list_str = f"{cmd_list_str}{cmd_name} - {cmd['desc']}\n"
 
-        self.print(f"\nLIST OF COMMANDS\n{cmd_list_str}\n")
+        self._print(f"\nLIST OF COMMANDS\n{cmd_list_str}\n")
